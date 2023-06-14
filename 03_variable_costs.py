@@ -69,3 +69,5 @@ add_dollars = ['Price', 'Cost']
 for item in add_dollars:
     variable_frame[item] = variable_frame[item].apply(currency)
 print(variable_frame)
+print()
+print(f"Variable costs: ${variable_sub:.2f}")
