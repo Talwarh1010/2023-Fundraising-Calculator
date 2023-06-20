@@ -42,10 +42,14 @@ def get_expenses(var_fixed):
                                         blank.")
         if item_name.lower() == "xxx":
                 break
-        quantity = num_check("Quantity:",
+        
+        if var_fixed == "variable":
+            quantity = num_check("Quantity:",
                                         "The amount must be a whole number \
                                         more than zero",
                                         int)
+        else:
+            quantity = 1
         price = num_check("How much for a single item? $",
                             "The price must be a number <more "
                             "than 0>",float)
@@ -72,11 +76,12 @@ product_name = not_blank("Product name: ",
                                     "The product name can't be blank. ")
 #loop to get component, quantity and price
 
-variable_expenses = get_expenses("variable")
-variable_frame= variable_expenses[0]
-variable_sub = variable_expenses[1]
+fixed_expenses = get_expenses("fixed")
+fixed_frame= fixed_expenses[0]
+fixed_sub = fixed_expenses[1]
 
 print()
-print(variable_frame)
+print(fixed_frame[['Cost']])
 print()
+print(f"Fixed costs: {fixed_sub:.2f}")
 # Currency Formatting (uses currency function)
