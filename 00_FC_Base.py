@@ -1,6 +1,7 @@
+# Used to create a dataframe
 import pandas
 
-# Function to validate numeric input
+# Checks that user input is an integer or float. As well as checking if it is more than or equal to 0.
 def num_check(question, error, num_type):
     while True:
         try:
@@ -23,7 +24,7 @@ def yes_no(question):
                 return var_item
         print("Please enter either yes or no... ..\n")
 
-# Function to validate non-blank input
+# Checks that string input is not blank
 def not_blank(question, error):
     while True:
         response = input(question)
@@ -109,11 +110,11 @@ have_fixed = yes_no("Do you have fixed costs (y / n)? ")
 # Check if the user has fixed costs and obtain the expenses if available
 if have_fixed == "yes":
     fixed_expenses = get_expenses("fixed")
-    fixed_frame = variable_expenses[0]  # Assign variable expenses DataFrame to fixed_frame (incorrect assignment)
+    fixed_frame = fixed_expenses[0]  
     fixed_sub = fixed_expenses[1]
 else:
     fixed_sub = 0
-    fixed_frame = ""  # Assign an empty string to fixed_frame (incorrect assignment)
+    fixed_frame = ""  
 
 print()
 print(f" ***** Fund Raising - {product_name} *****")
