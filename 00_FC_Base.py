@@ -117,7 +117,7 @@ else:
     fixed_frame = ""  
 
 print()
-print(f" ***** Fund Raising - {product_name} *****")
+print(f" ***** Fundraising - {product_name} *****")
 print()
 
 # Print the variable expenses
