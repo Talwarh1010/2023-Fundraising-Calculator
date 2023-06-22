@@ -1,6 +1,6 @@
 import pandas
 
-
+# Function to validate numeric input
 def num_check(question, error, num_type):
     while True:
         try:
@@ -11,7 +11,7 @@ def num_check(question, error, num_type):
         except ValueError:
             print(error)
 
-
+# Function to validate yes/no input
 def yes_no(question):
     to_check = ["yes", "no"]
     while True:
@@ -23,7 +23,7 @@ def yes_no(question):
                 return var_item
         print("Please enter either yes or no... ..\n")
 
-
+# Function to validate non-blank input
 def not_blank(question, error):
     while True:
         response = input(question)
@@ -32,11 +32,11 @@ def not_blank(question, error):
             continue
         return response
 
-
+# Function to format a number as currency
 def currency(x):
     return "${:.2f}".format(x)
 
-
+# Function to get expenses (variable or fixed)
 def get_expenses(var_fixed):
     item_list = []
     quantity_list = []
@@ -49,73 +49,80 @@ def get_expenses(var_fixed):
     item_name = ""
     while item_name.lower() != "xxx":
         print()
-        # get name, quantity and item
-        item_name = not_blank("Item name:",
-                              "The component name can't be  \
-                                        blank.")
+        # Get item name
+        item_name = not_blank("Item name:", "The component name can't be blank.")
         if item_name.lower() == "xxx":
             break
 
         if var_fixed == "variable":
-            quantity = num_check("Quantity:",
-                                 "The amount must be a whole number \
-                                        more than zero",
-                                 int)
+            # Get quantity for variable expenses
+            quantity = num_check("Quantity:", "The amount must be a whole number more than zero", int)
         else:
             quantity = 1
-        price = num_check("How much for a single item? $",
-                          "The price must be a number <more "
-                          "than 0>", float)
-        # add item, quantity and price to lists
+        # Get price for the item
+        price = num_check("How much for a single item? $", "The price must be a number <more than 0>", float)
+        # Add item, quantity, and price to lists
         item_list.append(item_name)
         quantity_list.append(quantity)
         price_list.append(price)
+
+    # Create a DataFrame from the lists
     expense_frame = pandas.DataFrame(variable_dict)
     expense_frame = expense_frame.set_index('Item')
+
     # Calculate cost of each component
-    expense_frame['Cost'] = expense_frame['Quantity'] \
-                            * expense_frame['Price']
+    expense_frame['Cost'] = expense_frame['Quantity'] * expense_frame['Price']
+
+    # Calculate the subtotal
     sub_total = expense_frame['Cost'].sum()
+
+    # Format price and cost columns as currency
     add_dollars = ['Price', 'Cost']
     for item in add_dollars:
         expense_frame[item] = expense_frame[item].apply(currency)
 
     return [expense_frame, sub_total]
 
-
+# Function to print expenses
 def expense_print(heading, frame, subtotal):
     print()
     print("**** {} Costs ****".format(heading))
     print(frame)
     print()
-    print(") Costs: ${:.2f)".format(heading, subtotal))
+    print(" {} Costs: ${:.2f}".format(heading, subtotal))
     return ""
 
+# Prompt the user to enter the product name
+product_name = not_blank("Product name: ", "The product name can't be blank.")
 
-product_name = not_blank("Product name: ",
-                         "The product name can't be blank. ")
 print()
 print("Please enter the variable costs below")
 
+# Get variable expenses
 variable_expenses = get_expenses("variable")
 variable_frame = variable_expenses[0]
 variable_sub = variable_expenses[1]
 
-# Get fixed costs fixed_expenses = get_expenses ("fixed") fixed_frame = variable expenses [0] fixed_sub =
-# fixed_expenses [1]
+# Get fixed expenses if available
 print()
 have_fixed = yes_no("Do you have fixed costs (y / n)? ")
+# Check if the user has fixed costs and obtain the expenses if available
 if have_fixed == "yes":
     fixed_expenses = get_expenses("fixed")
-    fixed_frame = variable_expenses[0]
+    fixed_frame = variable_expenses[0]  # Assign variable expenses DataFrame to fixed_frame (incorrect assignment)
     fixed_sub = fixed_expenses[1]
 else:
     fixed_sub = 0
+    fixed_frame = ""  # Assign an empty string to fixed_frame (incorrect assignment)
 
 print()
 print(f" ***** Fund Raising - {product_name} *****")
 print()
+
+# Print the variable expenses
 expense_print("Variable", variable_frame, variable_sub)
 
+# Print the fixed expenses if available
 if have_fixed == "yes":
     expense_print("Fixed", fixed_frame[['Cost']], fixed_sub)
+
